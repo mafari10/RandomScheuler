@@ -1,0 +1,863 @@
+<style>
+  .fs-wrap { font-family: Georgia, 'Times New Roman', serif; color: #2B2A25; max-width: 1100px; margin: 0 auto; padding: 0 12px; }
+  .fs-card { background: #FAF7EF; border: 1px solid #D9D2BF; border-radius: 6px; padding: 20px 22px; margin-bottom: 0; min-width: 0; }
+  .fs-title { font-size: 26px; font-weight: 700; color: #1F3D2E; margin: 8px 0 6px; text-align: center; }
+  .fs-sub { font-size: 13px; color: #6B6A5E; margin: 0 0 18px; font-family: -apple-system, Segoe UI, Roboto, sans-serif; }
+  .fs-section-h { font-size: 16px; font-weight: 700; color: #1F3D2E; margin: 0 0 4px; }
+  .fs-section-sub { font-size: 12px; color: #6B6A5E; margin: 0 0 14px; font-family: -apple-system, Segoe UI, Roboto, sans-serif; }
+  .fs-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: #8A6A2E; font-weight: 700; font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin-bottom: 6px; display: block; }
+  .fs-roster { width: 100%; box-sizing: border-box; display: block; font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 14px; line-height: 1.7; color: #2B2A25; background: #fff; border: 1px solid #D9D2BF; border-radius: 6px; padding: 10px 14px; min-height: 120px; resize: none; overflow: hidden; transition: border-color .15s, box-shadow .15s; }
+  .fs-roster:hover { border-color: #B9AF93; }
+  .fs-roster:focus { outline: none; border-color: #1F3D2E; box-shadow: 0 0 0 3px rgba(31,61,46,.15); }
+  .fs-count { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 11px; color: #6B6A5E; text-align: right; margin-top: 4px; }
+  .fs-row { display: flex; gap: 14px; margin-bottom: 14px; }
+  .fs-col { flex: 1; min-width: 0; }
+  .fs-btn { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 14px; font-weight: 600; padding: 10px 16px; border-radius: 4px; border: none; cursor: pointer; }
+  .fs-btn-primary { background: #1F3D2E; color: #FAF7EF; }
+  .fs-btn-primary:hover { background: #2C5340; }
+  .fs-btn-ghost { background: transparent; color: #6B6A5E; border: 1px solid #D9D2BF; }
+  .fs-btn-ghost:hover { background: #F1EDE0; }
+  .fs-btn-danger { background: transparent; color: #8B3A2B; border: 1px solid #D9C0B8; }
+  .fs-date-input { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 14px; border: 1px solid #D9D2BF; border-radius: 4px; padding: 8px 10px; background: #fff; color: #2B2A25; }
+  .fs-table { width: 100%; border-collapse: collapse; font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 13px; margin-bottom: 4px; }
+  .fs-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #8A6A2E; padding: 6px 8px; border-bottom: 2px solid #D9D2BF; }
+  .fs-table td { padding: 7px 8px; border-bottom: 1px solid #E8E3D3; }
+  .fs-table tr:last-child td { border-bottom: none; }
+  .fs-empty { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 13px; color: #6B6A5E; padding: 10px 0; }
+  .fs-bag { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 12px; color: #6B6A5E; margin-top: 8px; }
+  .fs-chip { display: inline-block; background: #EDE7D6; border-radius: 3px; padding: 2px 7px; margin: 2px 3px 2px 0; font-size: 11px; color: #4A4938; }
+  .fs-err { color: #8B3A2B; font-size: 12px; font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin-top: 6px; }
+  .fs-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .fs-note { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 13px; color: #4A4938; background: #F1EDE0; border-left: 3px solid #C98A3E; border-radius: 0; padding: 10px 12px; }
+  .fs-check-row { display: flex; align-items: center; gap: 8px; font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 13px; color: #2B2A25; margin-bottom: 8px; }
+  .fs-export-h { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 13px; font-weight: 700; color: #8A6A2E; text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 6px; }
+  .fs-export-h:first-child { margin-top: 0; }
+  .fs-text-input { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 14px; border: 1px solid #D9D2BF; border-radius: 4px; padding: 8px 10px; background: #fff; color: #2B2A25; width: 100%; box-sizing: border-box; }
+  .fs-slot { border-bottom: 1px solid #E8E3D3; padding: 10px 0; }
+  .fs-slot:last-child { border-bottom: none; }
+  .fs-slot-label { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 13px; font-weight: 700; color: #1F3D2E; margin-bottom: 6px; }
+  .fs-month-entry { background: #fff; border: 1px solid #D9D2BF; border-radius: 4px; padding: 12px; margin-bottom: 10px; }
+  .fs-month-top { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .fs-group-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  .fs-group-btn { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 13px; font-weight: 600; min-width: 40px; padding: 8px 0; border-radius: 4px; border: 1px solid #D9D2BF; background: #fff; color: #6B6A5E; cursor: pointer; }
+  .fs-group-btn.active { background: #1F3D2E; color: #FAF7EF; border-color: #1F3D2E; }
+  .fs-remove { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 12px; font-weight: 600; background: transparent; border: 1px solid #D9C0B8; color: #8B3A2B; border-radius: 4px; padding: 8px 10px; cursor: pointer; white-space: nowrap; }
+  .fs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin-bottom: 16px; align-items: stretch; }
+  .fs-span { grid-column: 1 / -1; }
+  .fs-table-wrap { overflow-x: auto; }
+  @media (max-width: 480px) {
+    .fs-wrap { padding: 0 8px; }
+    .fs-card { padding: 16px; }
+    .fs-row { flex-direction: column; gap: 10px; }
+    .fs-actions .fs-btn { flex: 1 1 100%; }
+  }
+  .fs-save-row { display: none; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid #E8E3D3; }
+  .fs-save-row .fs-col { min-width: 200px; }
+  .fs-saved-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .fs-saved { background: #fff; border: 1px solid #D9D2BF; border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .fs-saved.current { border-color: #1F3D2E; box-shadow: 0 0 0 2px rgba(31,61,46,.15); }
+  .fs-saved-name { font-family: Georgia, serif; font-size: 15px; font-weight: 700; color: #1F3D2E; overflow-wrap: anywhere; }
+  .fs-saved-meta { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 12px; color: #6B6A5E; }
+  .fs-saved-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .fs-mini { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 12px; font-weight: 600; padding: 7px 10px; border-radius: 4px; border: 1px solid #D9D2BF; background: transparent; color: #4A4938; cursor: pointer; }
+  .fs-mini:hover { background: #F1EDE0; }
+  .fs-mini.primary { background: #1F3D2E; color: #FAF7EF; border-color: #1F3D2E; }
+  .fs-mini.primary:hover { background: #2C5340; }
+  .fs-mini.danger { color: #8B3A2B; border-color: #D9C0B8; }
+  .fs-mini.danger.confirm { background: #8B3A2B; color: #FAF7EF; border-color: #8B3A2B; }
+  .fs-toast { font-family: -apple-system, Segoe UI, Roboto, sans-serif; font-size: 12px; color: #1F3D2E; margin-top: 8px; min-height: 16px; }
+</style>
+
+<div class="fs-wrap" id="fs-app">
+  <p class="fs-title">Monday &ndash; Sunday Field service scheduler</p>
+  <p class="fs-sub" style="text-align:center; margin-bottom:24px;">House&ndash;House &middot; SMPW&ndash;Spoggs &middot; Telephone &amp; Letter Writing Witnessing</p>
+
+  <div class="fs-grid">
+  <div class="fs-card">
+    <p class="fs-section-h">Wednesday Evening Witnessing</p>
+    <p class="fs-section-sub">Team leader (TL) and assistant (AS), drawn as a pair.</p>
+    <span class="fs-label">Team leaders (TL)</span>
+    <textarea class="fs-roster" id="tl-roster" rows="1" spellcheck="false" placeholder="One name per line"></textarea>
+    <div class="fs-count" id="tl-roster-count"></div>
+    <div style="height:12px"></div>
+    <span class="fs-label">Assistants (AS)</span>
+    <textarea class="fs-roster" id="as-roster" rows="1" spellcheck="false" placeholder="One name per line"></textarea>
+    <div class="fs-count" id="as-roster-count"></div>
+  </div>
+
+  <div class="fs-card">
+    <p class="fs-section-h">Saturday 10:00am</p>
+    <p class="fs-section-sub">One conductor drawn per Saturday.</p>
+    <span class="fs-label">Conductors</span>
+    <textarea class="fs-roster" id="sat-roster" rows="1" spellcheck="false" placeholder="One name per line"></textarea>
+    <div class="fs-count" id="sat-roster-count"></div>
+  </div>
+
+  <div class="fs-card">
+    <p class="fs-section-h">Sunday 11:00am</p>
+    <p class="fs-section-sub">One conductor drawn per Sunday.</p>
+    <span class="fs-label">Conductors</span>
+    <textarea class="fs-roster" id="sun-roster" rows="1" spellcheck="false" placeholder="One name per line"></textarea>
+    <div class="fs-count" id="sun-roster-count"></div>
+  </div>
+
+  <div class="fs-card">
+    <p class="fs-section-h">Rotation status</p>
+    <p class="fs-section-sub">Names are saved automatically. Everyone listed below is still due a turn in this cycle.</p>
+    <div class="fs-err" id="roster-err" style="display:none; margin-bottom:8px;"></div>
+    <div class="fs-bag" id="bag-status" style="margin-top:0; margin-bottom:12px;"></div>
+    <button class="fs-btn fs-btn-ghost" id="reset-cycle">Reset all rotations</button>
+  </div>
+
+  <div class="fs-card">
+    <p class="fs-section-h">Fixed witnessing slots</p>
+    <p class="fs-section-sub">Same person every week, no rotation. Edit the time or name if it changes.</p>
+    <div id="fixed-slots"></div>
+  </div>
+
+  <div class="fs-card">
+    <p class="fs-section-h">Monthly Group Witnessing</p>
+    <p class="fs-section-sub">Fixed leaders, not part of the rotation. Pick the month, then tap one or more Ghent groups (1&ndash;6) for it.</p>
+    <div class="fs-note" style="margin-bottom:12px;">With Carlos Molano and James Akingbade</div>
+    <div id="monthly-entries"></div>
+    <div style="height:6px"></div>
+    <button class="fs-btn fs-btn-ghost" id="monthly-add">+ Add month</button>
+  </div>
+
+  </div>
+
+  <div class="fs-grid">
+  <div class="fs-card fs-span">
+    <p class="fs-section-h">Create schedule</p>
+    <p class="fs-section-sub">Pick a date range. Names are drawn for every matching weekday, and the fixed items above are added automatically.</p>
+    <div class="fs-row">
+      <div class="fs-col">
+        <label class="fs-label" style="margin-bottom:4px;">Start date</label>
+        <input type="date" class="fs-date-input" id="export-start" style="width:100%; box-sizing:border-box;">
+      </div>
+      <div class="fs-col">
+        <label class="fs-label" style="margin-bottom:4px;">End date</label>
+        <input type="date" class="fs-date-input" id="export-end" style="width:100%; box-sizing:border-box;">
+      </div>
+    </div>
+    <label class="fs-label" style="margin-bottom:6px;">Draw names for</label>
+    <label class="fs-check-row"><input type="checkbox" id="inc-wed" checked> Wednesday Evening Witnessing</label>
+    <label class="fs-check-row"><input type="checkbox" id="inc-sat" checked> Saturday 10:00am</label>
+    <label class="fs-check-row"><input type="checkbox" id="inc-sun" checked> Sunday 11:00am</label>
+    <div class="fs-err" id="export-err" style="display:none"></div>
+    <div style="height:14px"></div>
+    <div class="fs-actions">
+      <button class="fs-btn fs-btn-primary" id="export-generate">Generate table</button>
+      <button class="fs-btn fs-btn-ghost" id="export-download" style="display:none;">Download CSV</button>
+      <button class="fs-btn fs-btn-ghost" id="export-pdf" style="display:none;">Download PDF</button>
+    </div>
+    <div class="fs-save-row" id="save-row">
+      <div class="fs-col">
+        <label class="fs-label" style="margin-bottom:4px;">Schedule name</label>
+        <input type="text" class="fs-text-input" id="save-name" maxlength="60" placeholder="October 2026 field service">
+      </div>
+      <button class="fs-btn fs-btn-primary" id="save-new">Save schedule</button>
+      <button class="fs-btn fs-btn-ghost" id="save-update" style="display:none;">Update saved schedule</button>
+    </div>
+    <div class="fs-err" id="save-err" style="display:none"></div>
+    <div class="fs-toast" id="save-toast" aria-live="polite"></div>
+    <div id="export-table-holder" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="fs-card fs-span">
+    <p class="fs-section-h">Saved schedules</p>
+    <p class="fs-section-sub">Stored in this browser only. Open one to view or download it again, rename it, replace it with the schedule currently shown, or delete it.</p>
+    <div id="saved-list"></div>
+  </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+(function() {
+  var DEFAULT_TL = ["Dick Pieter","Paul Dienaar","James Akingbade","Luc Naessens","Carlos Molano","Francis Boadi","Abes Boateng","Johan Thienpondt","Gideon Asiedu"];
+  var DEFAULT_AS = ["Ivan Petrov","Niels Visser","George Hagan","Samuel Owusu","Michael Akingbade","Robert Huka","Georges Boateng"];
+  var DEFAULT_SAT = ["Pieter Dick","Luc Naessens","Carlos Mulano","James Akingbade","Gerd Willaert","Paul Dienaar","Johan Thienpondt","Erwin Ubels","Gideon Asiedu"];
+  var DEFAULT_SUN = ["Francis Boadi","Walter Pruym","Lewis Akinlade","Dee Brown","Abes Boateng","Peace Ihoya","Niels Visser","Seth Amoah","Robert Huka"];
+  var KEY = "tlas-scheduler-state";
+  var MONSUN_NOTE = "House\u2013House \u00b7 SMPW\u2013Spoggs \u00b7 Telephone & Letter Writing Witnessing";
+  var MONTHLY_NOTE = "With Carlos Molano and James Akingbade";
+  var DEFAULT_FIXED = [
+    { label: "Thursday morning", time: "10:00", name: "Michael Afari" },
+    { label: "Saturday evening", time: "17:00", name: "Lewis Akinlade" },
+    { label: "Sunday afternoon", time: "16:00", name: "Paul Dienaar" }
+  ];
+  var DEFAULT_MONTHLY = [
+    { month: "2026-09", groups: [5] },
+    { month: "2026-10", groups: [6] },
+    { month: "2026-11", groups: [1, 2] }
+  ];
+
+  var state = {
+    fixedSlots: DEFAULT_FIXED.map(function(s){ return Object.assign({}, s); }),
+    monthly: DEFAULT_MONTHLY.map(function(m){ return { month: m.month, groups: m.groups.slice() }; }),
+    tlRoster: DEFAULT_TL.slice(),
+    asRoster: DEFAULT_AS.slice(),
+    satRoster: DEFAULT_SAT.slice(),
+    sunRoster: DEFAULT_SUN.slice(),
+    tlBag: [], asBag: [], satBag: [], sunBag: [],
+    tlLast: null, asLast: null, satLast: null, sunLast: null
+  };
+
+  function parseLines(text) {
+    return text.split("\n").map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function refillBag(roster, avoidName) {
+    var bag = shuffle(roster);
+    if (bag.length > 1 && bag[0] === avoidName) {
+      var idx = 1 + Math.floor(Math.random() * (bag.length - 1));
+      var tmp = bag[0]; bag[0] = bag[idx]; bag[idx] = tmp;
+    }
+    return bag;
+  }
+
+  function drawFrom(rosterKey, bagKey, lastKey) {
+    var roster = state[rosterKey];
+    if (!roster.length) return null;
+    if (!state[bagKey] || !state[bagKey].length) {
+      state[bagKey] = refillBag(roster, state[lastKey]);
+    }
+    var name = state[bagKey].shift();
+    state[lastKey] = name;
+    return name;
+  }
+
+  var SCHEDULES_KEY = "tlas-saved-schedules";
+  var schedules = [];
+
+  function persist() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function persistSchedules() {
+    try { localStorage.setItem(SCHEDULES_KEY, JSON.stringify(schedules)); return true; }
+    catch (e) { return false; }
+  }
+
+  async function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) state = Object.assign(state, JSON.parse(raw));
+    } catch (e) {}
+    try {
+      var rawS = localStorage.getItem(SCHEDULES_KEY);
+      if (rawS) schedules = JSON.parse(rawS) || [];
+    } catch (e) { schedules = []; }
+  }
+
+  function fitBox(id) {
+    var el = document.getElementById(id);
+    el.style.height = "auto";
+    el.style.height = Math.max(120, el.scrollHeight + 2) + "px";
+    var n = parseLines(el.value).length;
+    document.getElementById(id + "-count").textContent = n + (n === 1 ? " name" : " names");
+  }
+
+  function fitAllBoxes() {
+    ["tl-roster","as-roster","sat-roster","sun-roster"].forEach(fitBox);
+  }
+
+  ["tl-roster","as-roster","sat-roster","sun-roster"].forEach(function(id) {
+    document.getElementById(id).addEventListener("input", function() { fitBox(id); });
+  });
+  window.addEventListener("resize", fitAllBoxes);
+
+  function renderRosterBoxes() {
+    document.getElementById("tl-roster").value = state.tlRoster.join("\n");
+    document.getElementById("as-roster").value = state.asRoster.join("\n");
+    document.getElementById("sat-roster").value = state.satRoster.join("\n");
+    document.getElementById("sun-roster").value = state.sunRoster.join("\n");
+    fitAllBoxes();
+  }
+
+  function chip(name) { return "<span class='fs-chip'>" + escapeHtml(name) + "</span>"; }
+
+  function escapeHtml(s) {
+    var d = document.createElement("div");
+    d.innerText = s == null ? "" : s;
+    return d.innerHTML;
+  }
+
+  function renderBagStatus() {
+    var el = document.getElementById("bag-status");
+    function line(label, bag) {
+      return "<div style='margin-top:4px'>" + label + " still due: " + (bag.length ? bag.map(chip).join("") : "<span class='fs-empty' style='padding:0'>rotation complete, will reshuffle</span>") + "</div>";
+    }
+    el.innerHTML = line("TL", state.tlBag) + line("AS", state.asBag) + line("Saturday conductor", state.satBag) + line("Sunday conductor", state.sunBag);
+  }
+
+  var MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  function monthLabel(ym) {
+    var p = (ym || "").split("-");
+    if (p.length !== 2) return ym || "";
+    return MONTH_NAMES[parseInt(p[1], 10) - 1] + " " + p[0];
+  }
+
+  function groupsLabel(groups) {
+    var g = groups.slice().sort(function(a, b){ return a - b; });
+    if (!g.length) return "No group selected";
+    if (g.length === 1) return "Ghent Group " + g[0];
+    var head = g.slice(0, -1).join(", ");
+    return "Ghent Groups " + head + " & " + g[g.length - 1];
+  }
+
+  function fixedTableRows() {
+    return state.fixedSlots.map(function(s) {
+      return [s.label, s.time ? s.time + "h" : "", s.name];
+    });
+  }
+
+  function monthlyTableRows() {
+    return state.monthly.slice().sort(function(a, b){ return a.month < b.month ? -1 : a.month > b.month ? 1 : 0; })
+      .filter(function(m){ return m.month && m.groups.length; })
+      .map(function(m){ return [monthLabel(m.month), groupsLabel(m.groups)]; });
+  }
+
+  function renderFixed() {
+    var el = document.getElementById("fixed-slots");
+    el.innerHTML = state.fixedSlots.map(function(s, i) {
+      return "<div class='fs-slot'>" +
+        "<div class='fs-slot-label'>" + escapeHtml(s.label) + "</div>" +
+        "<div class='fs-row' style='margin-bottom:0'>" +
+          "<div style='width:120px'><input type='time' class='fs-text-input' data-fixed-time='" + i + "' value='" + escapeHtml(s.time) + "'></div>" +
+          "<div class='fs-col'><input type='text' class='fs-text-input' data-fixed-name='" + i + "' value='" + escapeHtml(s.name) + "'></div>" +
+        "</div></div>";
+    }).join("");
+    Array.prototype.forEach.call(el.querySelectorAll("[data-fixed-time]"), function(inp) {
+      inp.addEventListener("input", function() {
+        state.fixedSlots[parseInt(inp.getAttribute("data-fixed-time"), 10)].time = inp.value;
+        persist();
+      });
+    });
+    Array.prototype.forEach.call(el.querySelectorAll("[data-fixed-name]"), function(inp) {
+      inp.addEventListener("input", function() {
+        state.fixedSlots[parseInt(inp.getAttribute("data-fixed-name"), 10)].name = inp.value;
+        persist();
+      });
+    });
+  }
+
+  function renderMonthly() {
+    var el = document.getElementById("monthly-entries");
+    if (!state.monthly.length) {
+      el.innerHTML = "<div class='fs-empty'>No months added yet.</div>";
+      return;
+    }
+    el.innerHTML = state.monthly.map(function(m, i) {
+      var btns = [1,2,3,4,5,6].map(function(n) {
+        var on = m.groups.indexOf(n) !== -1;
+        return "<button type='button' class='fs-group-btn" + (on ? " active" : "") + "' data-m='" + i + "' data-g='" + n + "'>" + n + "</button>";
+      }).join("");
+      return "<div class='fs-month-entry'>" +
+        "<div class='fs-month-top'>" +
+          "<div class='fs-col'><input type='month' class='fs-text-input' data-month='" + i + "' value='" + escapeHtml(m.month) + "'></div>" +
+          "<button type='button' class='fs-remove' data-remove='" + i + "'>Remove</button>" +
+        "</div>" +
+        "<span class='fs-label'>Ghent groups</span>" +
+        "<div class='fs-group-btns'>" + btns + "</div>" +
+      "</div>";
+    }).join("");
+    Array.prototype.forEach.call(el.querySelectorAll("[data-month]"), function(inp) {
+      inp.addEventListener("change", function() {
+        state.monthly[parseInt(inp.getAttribute("data-month"), 10)].month = inp.value;
+        persist();
+      });
+    });
+    Array.prototype.forEach.call(el.querySelectorAll("[data-g]"), function(btn) {
+      btn.addEventListener("click", function() {
+        var entry = state.monthly[parseInt(btn.getAttribute("data-m"), 10)];
+        var n = parseInt(btn.getAttribute("data-g"), 10);
+        var pos = entry.groups.indexOf(n);
+        if (pos === -1) entry.groups.push(n); else entry.groups.splice(pos, 1);
+        entry.groups.sort(function(a, b){ return a - b; });
+        persist();
+        renderMonthly();
+      });
+    });
+    Array.prototype.forEach.call(el.querySelectorAll("[data-remove]"), function(btn) {
+      btn.addEventListener("click", function() {
+        state.monthly.splice(parseInt(btn.getAttribute("data-remove"), 10), 1);
+        persist();
+        renderMonthly();
+      });
+    });
+  }
+
+  document.getElementById("monthly-add").addEventListener("click", function() {
+    var last = state.monthly.length ? state.monthly[state.monthly.length - 1].month : "";
+    var next;
+    if (last) {
+      var p = last.split("-");
+      var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10), 1);
+      next = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+    } else {
+      next = todayISO().slice(0, 7);
+    }
+    state.monthly.push({ month: next, groups: [] });
+    persist();
+    renderMonthly();
+  });
+
+  function renderAll() {
+    renderRosterBoxes();
+    renderBagStatus();
+    renderFixed();
+    renderMonthly();
+    renderSaved();
+  }
+
+  function todayISO() {
+    var d = new Date();
+    var m = String(d.getMonth() + 1).padStart(2, "0");
+    var day = String(d.getDate()).padStart(2, "0");
+    return d.getFullYear() + "-" + m + "-" + day;
+  }
+
+  function syncRosters() {
+    var errEl = document.getElementById("roster-err");
+    var tl = parseLines(document.getElementById("tl-roster").value);
+    var as = parseLines(document.getElementById("as-roster").value);
+    var sat = parseLines(document.getElementById("sat-roster").value);
+    var sun = parseLines(document.getElementById("sun-roster").value);
+    if (!tl.length || !as.length || !sat.length || !sun.length) {
+      errEl.style.display = "block";
+      errEl.textContent = "Every roster needs at least one name, so the last change was not saved.";
+      return false;
+    }
+    errEl.style.display = "none";
+    state.tlRoster = tl; state.asRoster = as; state.satRoster = sat; state.sunRoster = sun;
+    state.tlBag = state.tlBag.filter(function(n){ return tl.indexOf(n) !== -1; });
+    state.asBag = state.asBag.filter(function(n){ return as.indexOf(n) !== -1; });
+    state.satBag = state.satBag.filter(function(n){ return sat.indexOf(n) !== -1; });
+    state.sunBag = state.sunBag.filter(function(n){ return sun.indexOf(n) !== -1; });
+    persist();
+    renderBagStatus();
+    return true;
+  }
+
+  ["tl-roster","as-roster","sat-roster","sun-roster"].forEach(function(id) {
+    document.getElementById(id).addEventListener("change", syncRosters);
+  });
+
+  document.getElementById("reset-cycle").addEventListener("click", function() {
+    state.tlBag = []; state.asBag = []; state.satBag = []; state.sunBag = [];
+    state.tlLast = null; state.asLast = null; state.satLast = null; state.sunLast = null;
+    persist();
+    renderBagStatus();
+  });
+
+  var SECTION_LABEL = { wed: "Wednesday Evening Witnessing", sat: "Saturday 10:00am", sun: "Sunday 11:00am" };
+
+  function parseISODate(s) {
+    var parts = s.split("-");
+    return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+  }
+
+  function fmtDate(d) {
+    return d.toLocaleDateString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+
+  var lastExportGroups = [];
+  var lastRangeLabel = "";
+  var currentSavedId = null;
+
+  document.getElementById("export-generate").addEventListener("click", function() {
+    var errEl = document.getElementById("export-err");
+    var startVal = document.getElementById("export-start").value;
+    var endVal = document.getElementById("export-end").value;
+    var incWed = document.getElementById("inc-wed").checked;
+    var incSat = document.getElementById("inc-sat").checked;
+    var incSun = document.getElementById("inc-sun").checked;
+
+    if (!syncRosters()) { errEl.style.display = "block"; errEl.textContent = "Fix the empty roster above first."; return; }
+    if (!startVal || !endVal) { errEl.style.display = "block"; errEl.textContent = "Pick both a start and end date."; return; }
+    var start = parseISODate(startVal);
+    var end = parseISODate(endVal);
+    if (start > end) { errEl.style.display = "block"; errEl.textContent = "Start date must be before the end date."; return; }
+    if ((end - start) / 86400000 > 366) { errEl.style.display = "block"; errEl.textContent = "Keep the range to 366 days or fewer."; return; }
+    errEl.style.display = "none";
+
+    var wedRows = [], satRows = [], sunRows = [];
+    var cursor = new Date(start);
+    while (cursor <= end) {
+      var dow = cursor.getDay();
+      var dateLabel = fmtDate(cursor);
+      if (incWed && dow === 3) {
+        wedRows.push([dateLabel, drawFrom("tlRoster", "tlBag", "tlLast"), drawFrom("asRoster", "asBag", "asLast")]);
+      }
+      if (incSat && dow === 6) {
+        satRows.push([dateLabel, drawFrom("satRoster", "satBag", "satLast")]);
+      }
+      if (incSun && dow === 0) {
+        sunRows.push([dateLabel, drawFrom("sunRoster", "sunBag", "sunLast")]);
+      }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    var groups = [];
+    if (wedRows.length) groups.push({ header: SECTION_LABEL.wed, cols: ["Date","TL","AS"], rows: wedRows });
+    if (satRows.length) groups.push({ header: SECTION_LABEL.sat, cols: ["Date","Conductor"], rows: satRows });
+    if (sunRows.length) groups.push({ header: SECTION_LABEL.sun, cols: ["Date","Conductor"], rows: sunRows });
+    groups.push({ header: "Fixed witnessing slots", table: { cols: ["Slot","Time","Leader"], rows: fixedTableRows() } });
+    var monthlyRows = monthlyTableRows();
+    if (monthlyRows.length) {
+      groups.push({ header: "Monthly Group Witnessing", note: MONTHLY_NOTE, table: { cols: ["Month","Group(s)"], rows: monthlyRows } });
+    }
+
+    if (!wedRows.length && !satRows.length && !sunRows.length) {
+      errEl.style.display = "block";
+      errEl.textContent = "No Wednesday, Saturday or Sunday dates were drawn in that range, so only the fixed items are listed.";
+    }
+
+    lastExportGroups = groups;
+    lastRangeLabel = fmtDate(start) + " \u2013 " + fmtDate(end);
+    currentSavedId = null;
+    persist();
+    renderAll();
+    showResult("");
+    var nm = document.getElementById("save-name");
+    nm.value = MONTH_NAMES[start.getMonth()] + " " + start.getFullYear() + " field service";
+  });
+
+  function showResult(name) {
+    renderExportTable(lastExportGroups);
+    document.getElementById("export-download").style.display = "inline-block";
+    document.getElementById("export-pdf").style.display = "inline-block";
+    document.getElementById("save-row").style.display = "flex";
+    document.getElementById("save-update").style.display = currentSavedId ? "inline-block" : "none";
+    if (name) document.getElementById("save-name").value = name;
+    renderSaved();
+  }
+
+  function countDates(groups) {
+    var n = 0;
+    groups.forEach(function(g) { if (g.cols && g.rows) n += g.rows.length; });
+    return n;
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById("save-toast");
+    t.textContent = msg;
+    setTimeout(function() { if (t.textContent === msg) t.textContent = ""; }, 3500);
+  }
+
+  function showSaveError(msg) {
+    var e = document.getElementById("save-err");
+    if (!msg) { e.style.display = "none"; return; }
+    e.style.display = "block"; e.textContent = msg;
+  }
+
+  function findSchedule(id) {
+    for (var i = 0; i < schedules.length; i++) if (schedules[i].id === id) return schedules[i];
+    return null;
+  }
+
+  var renamingId = null;
+  var confirmDeleteId = null;
+
+  function renderSaved() {
+    var el = document.getElementById("saved-list");
+    if (!schedules.length) {
+      el.innerHTML = "<div class='fs-empty'>No saved schedules yet. Generate a schedule above, then choose Save schedule.</div>";
+      return;
+    }
+    var list = schedules.slice().sort(function(a, b){ return b.savedAt - a.savedAt; });
+    el.innerHTML = "<div class='fs-saved-grid'>" + list.map(function(sc) {
+      var saved = new Date(sc.savedAt).toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
+      var title = renamingId === sc.id
+        ? "<input type='text' class='fs-text-input' maxlength='60' data-rename-input='" + sc.id + "' value='" + escapeHtml(sc.name) + "'>"
+        : "<div class='fs-saved-name'>" + escapeHtml(sc.name) + "</div>";
+      var actions = renamingId === sc.id
+        ? "<button class='fs-mini primary' data-act='rename-save' data-id='" + sc.id + "'>Save name</button><button class='fs-mini' data-act='rename-cancel' data-id='" + sc.id + "'>Cancel</button>"
+        : "<button class='fs-mini primary' data-act='open' data-id='" + sc.id + "'>Open</button>" +
+          "<button class='fs-mini' data-act='rename' data-id='" + sc.id + "'>Rename</button>" +
+          "<button class='fs-mini' data-act='overwrite' data-id='" + sc.id + "'>Replace with current</button>" +
+          "<button class='fs-mini danger" + (confirmDeleteId === sc.id ? " confirm" : "") + "' data-act='delete' data-id='" + sc.id + "'>" + (confirmDeleteId === sc.id ? "Confirm delete" : "Delete") + "</button>";
+      return "<div class='fs-saved" + (currentSavedId === sc.id ? " current" : "") + "'>" + title +
+        "<div class='fs-saved-meta'>" + escapeHtml(sc.range) + "</div>" +
+        "<div class='fs-saved-meta'>" + countDates(sc.groups) + " dated assignments &middot; saved " + saved + "</div>" +
+        "<div class='fs-saved-actions'>" + actions + "</div></div>";
+    }).join("") + "</div>";
+
+    Array.prototype.forEach.call(el.querySelectorAll("[data-act]"), function(btn) {
+      btn.addEventListener("click", function() { handleSavedAction(btn.getAttribute("data-act"), btn.getAttribute("data-id")); });
+    });
+    var ri = el.querySelector("[data-rename-input]");
+    if (ri) {
+      ri.focus(); ri.select();
+      ri.addEventListener("keydown", function(ev) {
+        if (ev.key === "Enter") handleSavedAction("rename-save", ri.getAttribute("data-rename-input"));
+        if (ev.key === "Escape") handleSavedAction("rename-cancel", ri.getAttribute("data-rename-input"));
+      });
+    }
+  }
+
+  function handleSavedAction(act, id) {
+    var sc = findSchedule(id);
+    if (!sc) return;
+    if (act !== "delete") confirmDeleteId = null;
+    if (act === "open") {
+      lastExportGroups = JSON.parse(JSON.stringify(sc.groups));
+      lastRangeLabel = sc.range;
+      currentSavedId = sc.id;
+      showSaveError("");
+      showResult(sc.name);
+      showToast("Opened \u201c" + sc.name + "\u201d.");
+      document.getElementById("save-row").scrollIntoView({ behavior: "smooth", block: "center" });
+    } else if (act === "rename") {
+      renamingId = id; renderSaved();
+    } else if (act === "rename-cancel") {
+      renamingId = null; renderSaved();
+    } else if (act === "rename-save") {
+      var inp = document.querySelector("[data-rename-input='" + id + "']");
+      var nm = inp ? inp.value.trim() : "";
+      if (!nm) { inp.focus(); return; }
+      sc.name = nm;
+      renamingId = null;
+      persistSchedules();
+      if (currentSavedId === id) document.getElementById("save-name").value = nm;
+      renderSaved();
+    } else if (act === "overwrite") {
+      if (!lastExportGroups.length) { showSaveError("Generate or open a schedule first, then replace this one with it."); return; }
+      if (lastExportGroups === sc.groups) return;
+      sc.groups = JSON.parse(JSON.stringify(lastExportGroups));
+      sc.range = lastRangeLabel;
+      sc.savedAt = Date.now();
+      currentSavedId = id;
+      persistSchedules();
+      showSaveError("");
+      showResult("");
+      showToast("Replaced \u201c" + sc.name + "\u201d with the schedule shown.");
+    } else if (act === "delete") {
+      if (confirmDeleteId !== id) { confirmDeleteId = id; renderSaved(); return; }
+      schedules = schedules.filter(function(x){ return x.id !== id; });
+      confirmDeleteId = null;
+      if (currentSavedId === id) { currentSavedId = null; document.getElementById("save-update").style.display = "none"; }
+      persistSchedules();
+      renderSaved();
+    }
+  }
+
+  document.getElementById("save-new").addEventListener("click", function() {
+    var nm = document.getElementById("save-name").value.trim();
+    if (!lastExportGroups.length) { showSaveError("Generate a schedule first."); return; }
+    if (!nm) { showSaveError("Enter a name for this schedule."); return; }
+    var sc = {
+      id: "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      name: nm,
+      range: lastRangeLabel,
+      savedAt: Date.now(),
+      groups: JSON.parse(JSON.stringify(lastExportGroups))
+    };
+    schedules.push(sc);
+    if (!persistSchedules()) { schedules.pop(); showSaveError("Your browser blocked saving. Check that local storage is allowed for this page."); return; }
+    currentSavedId = sc.id;
+    showSaveError("");
+    showResult("");
+    showToast("Saved \u201c" + nm + "\u201d.");
+  });
+
+  document.getElementById("save-update").addEventListener("click", function() {
+    var sc = findSchedule(currentSavedId);
+    var nm = document.getElementById("save-name").value.trim();
+    if (!sc) { showSaveError("That saved schedule no longer exists. Use Save schedule instead."); return; }
+    if (!nm) { showSaveError("Enter a name for this schedule."); return; }
+    sc.name = nm;
+    sc.range = lastRangeLabel;
+    sc.groups = JSON.parse(JSON.stringify(lastExportGroups));
+    sc.savedAt = Date.now();
+    persistSchedules();
+    showSaveError("");
+    renderSaved();
+    showToast("Updated \u201c" + nm + "\u201d.");
+  });
+
+  function tableHtml(cols, rows) {
+    var thead = "<tr>" + cols.map(function(c){ return "<th>" + escapeHtml(c) + "</th>"; }).join("") + "</tr>";
+    var tbody = rows.map(function(r) {
+      return "<tr>" + r.map(function(v){ return "<td>" + escapeHtml(v) + "</td>"; }).join("") + "</tr>";
+    }).join("");
+    return "<table class='fs-table'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
+  }
+
+  function renderExportTable(groups) {
+    var holder = document.getElementById("export-table-holder");
+    var html = "<div class='fs-grid' style='margin:0'>";
+    groups.forEach(function(g) {
+      html += "<div class='fs-table-wrap'><div class='fs-export-h' style='margin-top:0'>" + escapeHtml(g.header) + "</div>";
+      if (g.note) html += "<div class='fs-note' style='margin-bottom:8px'>" + escapeHtml(g.note) + "</div>";
+      if (g.table) html += tableHtml(g.table.cols, g.table.rows);
+      else if (g.cols) html += tableHtml(g.cols, g.rows);
+      html += "</div>";
+    });
+    holder.innerHTML = html + "</div>";
+  }
+
+  document.getElementById("export-download").addEventListener("click", function() {
+    if (!lastExportGroups.length) return;
+    var lines = ["Monday \u2013 Sunday Field service scheduler", '"' + MONSUN_NOTE.replace(/"/g, '""') + '"', lastRangeLabel, ""];
+    lastExportGroups.forEach(function(g) {
+      lines.push(g.header);
+      if (g.note) {
+        lines.push('"' + g.note.replace(/"/g, '""') + '"');
+      }
+      if (g.table) {
+        lines.push(g.table.cols.join(","));
+        g.table.rows.forEach(function(r) {
+          lines.push(r.map(function(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }).join(","));
+        });
+        lines.push("");
+        return;
+      }
+      if (g.note) { lines.push(""); return; }
+      lines.push(g.cols.join(","));
+      g.rows.forEach(function(r) {
+        lines.push(r.map(function(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }).join(","));
+      });
+      lines.push("");
+    });
+    var csv = lines.join("\n");
+    var blob = new Blob([csv], { type: "text/csv" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "field-service-schedule.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("export-pdf").addEventListener("click", function() {
+    if (!lastExportGroups.length || !window.jspdf) return;
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: "pt", format: "a4" });
+    var pageW = doc.internal.pageSize.getWidth();
+    var pageH = doc.internal.pageSize.getHeight();
+    var margin = 40;
+    var green = [31, 61, 46];
+    var cream = [250, 247, 239];
+    var amber = [201, 138, 62];
+    var ink = [43, 42, 37];
+    var muted = [107, 106, 94];
+    var border = [217, 210, 191];
+    var band = [241, 237, 224];
+
+    doc.setFillColor(green[0], green[1], green[2]);
+    doc.rect(0, 0, pageW, 92, "F");
+    doc.setTextColor(cream[0], cream[1], cream[2]);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(19);
+    doc.text("Monday \u2013 Sunday Field service scheduler", pageW / 2, 36, { align: "center" });
+    doc.setTextColor(amber[0], amber[1], amber[2]);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    var rangeLabel = lastRangeLabel;
+    doc.setTextColor(cream[0], cream[1], cream[2]);
+    doc.setFontSize(9.5);
+    doc.text(MONSUN_NOTE, pageW / 2, 54, { align: "center" });
+    doc.setTextColor(amber[0], amber[1], amber[2]);
+    doc.setFontSize(10);
+    doc.text(rangeLabel + "   generated " + fmtDate(new Date()), pageW / 2, 74, { align: "center" });
+
+    var y = 122;
+
+    function ensureRoom(h) {
+      if (y + h > pageH - 50) {
+        doc.addPage();
+        y = 50;
+      }
+    }
+
+    lastExportGroups.forEach(function(g) {
+      ensureRoom(34);
+      doc.setFillColor(amber[0], amber[1], amber[2]);
+      doc.rect(margin, y, pageW - margin * 2, 24, "F");
+      doc.setTextColor(green[0], green[1], green[2]);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(g.header.toUpperCase(), margin + 10, y + 16);
+      y += 24;
+
+      if (g.note) {
+        var noteLines = doc.splitTextToSize(g.note, pageW - margin * 2 - 24);
+        var boxH = noteLines.length * 14 + 18;
+        ensureRoom(boxH);
+        doc.setFillColor(band[0], band[1], band[2]);
+        doc.rect(margin, y, pageW - margin * 2, boxH, "F");
+        doc.setDrawColor(amber[0], amber[1], amber[2]);
+        doc.setLineWidth(2.5);
+        doc.line(margin, y, margin, y + boxH);
+        doc.setTextColor(ink[0], ink[1], ink[2]);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(noteLines, margin + 14, y + 17);
+        y += boxH + 10;
+      }
+
+      if (g.table) {
+        doc.autoTable({
+          startY: y,
+          margin: { left: margin, right: margin },
+          head: [g.table.cols],
+          body: g.table.rows,
+          theme: "grid",
+          styles: { font: "helvetica", fontSize: 10, textColor: ink, lineColor: border, lineWidth: 0.5, cellPadding: 6 },
+          headStyles: { fillColor: green, textColor: cream, fontStyle: "bold" },
+          alternateRowStyles: { fillColor: band },
+          didDrawPage: function() { y = 50; }
+        });
+        y = doc.lastAutoTable.finalY + 22;
+        return;
+      }
+      if (g.note) { return; }
+
+      doc.autoTable({
+        startY: y,
+        margin: { left: margin, right: margin },
+        head: [g.cols],
+        body: g.rows.map(function(r) { return r.map(function(v){ return v == null ? "" : v; }); }),
+        theme: "grid",
+        styles: { font: "helvetica", fontSize: 10, textColor: ink, lineColor: border, lineWidth: 0.5, cellPadding: 6 },
+        headStyles: { fillColor: green, textColor: cream, fontStyle: "bold" },
+        alternateRowStyles: { fillColor: band },
+        didDrawPage: function() { y = 50; }
+      });
+      y = doc.lastAutoTable.finalY + 22;
+    });
+
+    var pageCount = doc.internal.getNumberOfPages();
+    for (var i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(border[0], border[1], border[2]);
+      doc.setLineWidth(0.5);
+      doc.line(margin, pageH - 34, pageW - margin, pageH - 34);
+      doc.setTextColor(muted[0], muted[1], muted[2]);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.text("Page " + i + " of " + pageCount, pageW - margin, pageH - 20, { align: "right" });
+    }
+
+    doc.save("field-service-schedule.pdf");
+  });
+
+  load().then(renderAll);
+})();
+</script>
